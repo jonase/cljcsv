@@ -6,9 +6,9 @@ license](http://www.opensource.org/licenses/eclipse-1.0.php).
 
 ## Installation
 
-Download [the jar file](#) and add it to your classpath. Clojure 1.2
-is required. I have not added this library to clojars since there
-already is [a csv
+Download [the jar file](http://github.com/jonase/cljcsv/downloads) and
+add it to your classpath. Clojure 1.2 is required. I have not added
+this library to clojars since there already is [a csv
 library](http://github.com/davidsantiago/clojure-csv) for clojure
 there.
 
