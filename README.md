@@ -14,12 +14,12 @@ there.
 
 ## Usage
 
-    (require '(org.github.jonase [csv :as csv])
+    (require '(com.github.jonase [csv :as csv])
              '(clojure.java [io :as io]))
 
     (with-open [in-file (io/reader "in-file.csv")]
       (doall
-        (csv/read file)))
+        (csv/read in-file)))
 
     (with-open [out-file (io/writer "out-file.csv")]
       (csv/write out-file
