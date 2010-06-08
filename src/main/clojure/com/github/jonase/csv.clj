@@ -130,9 +130,10 @@
 		     :or   {separator \,
 			    quote \"
 			    newline :lf}}]
-  (let [newline (condp = newline
-		    :lf "\n"
-		    :cr+lf "\r\n")]
-    (write* writer records separator quote newline)))
+  (write* writer
+	  records
+	  separator
+	  quote
+	  ({:lf "\n" :cr+lf "\r\n"} newline)))
 
 
