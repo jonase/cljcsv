@@ -92,6 +92,8 @@
   [reader & {:keys [separator quote]
 	     :or   {separator \,
 		    quote \"}}]
+  {:pre  [(char? separator)
+	  (char? quote)]}
   (read* reader (int separator) (int quote)))
 
 (defn- write-cell [^Writer writer obj sep quote]
@@ -125,11 +127,14 @@
   or :cr+lf). Each cell (any object) is separated with
   separator (default \\,). Cells are quoted (default \\\") only when
   needed. The writer is not closed."
-
   [writer records & {:keys [separator quote newline]
 		     :or   {separator \,
 			    quote \"
 			    newline :lf}}]
+  {:pre  [(char? separator)
+	  (char? quote)
+	  (or (= newline :lf)
+	      (= newline :cr+lf))]}
   (write* writer
 	  records
 	  separator
