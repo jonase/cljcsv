@@ -11,7 +11,7 @@
   com.github.jonase.csv
   (:refer-clojure :exclude [read])
   (:require (clojure [string :as str]))
-  (:import (java.io Reader Writer)))
+  (:import (java.io Reader Writer EOFException)))
 
 (set! *warn-on-reflection* true)
 
@@ -59,7 +59,9 @@
 		  (recur next-ch false)))))
 	
 	eof
-	[(.toString sb) :eof]
+	(if in-quotes?
+	  (throw (EOFException. "End of file reached while in a quoted state."))
+	  [(.toString sb) :eof])
 	
 	;; else
 	(do (.append sb (char ch))

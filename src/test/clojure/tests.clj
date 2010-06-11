@@ -2,7 +2,7 @@
   (:use clojure.test)
   (:require (com.github.jonase [csv :as csv])
 	    (clojure.java [io :as io]))
-  (:import (java.io Reader StringReader StringWriter)))
+  (:import (java.io Reader StringReader StringWriter EOFException)))
 
 (deftest reading
   (with-open [simple-file (io/reader "src/test/clojure/simple.csv")]
@@ -22,4 +22,7 @@
       (->> simple-file csv/read (csv/write string-writer))
       (is (= simple-file-content
 	     (str string-writer))))))
-  
+
+(deftest throw-if-quoted-on-eof
+  (let [reader (StringReader. "ab,\"de,gh\nij,kl,mn")]
+    (is (thrown? RuntimeException (doall (csv/read reader))))))
