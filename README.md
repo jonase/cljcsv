@@ -2,15 +2,33 @@
 
 Cljcsv is a clojure library for reading and writing comma separated
 value files. It is licensed under the [Eclipse open source
-license](http://www.opensource.org/licenses/eclipse-1.0.php).
+license](http://www.opensource.org/licenses/eclipse-1.0.php). Clojure
+1.2 is required.
 
 ## Installation
 
-Download [the jar file](http://github.com/jonase/cljcsv/downloads) and
-add it to your classpath. Clojure 1.2 is required. I have not added
-this library to clojars since there already is [a csv
-library](http://github.com/davidsantiago/clojure-csv) for clojure
-there.
+### Using maven
+
+Add 
+
+    <dependency>
+      <groupId>com.github.jonase.csv</groupId>
+      <artifactId>csvclj</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+
+to your `pom.xml` file.
+
+### Using leiningen
+
+Add `[com.github.jonase.csv/csvclj "1.0.0-SNAPSHOT"]` as an dependency
+to your `project.clj`.
+
+### Download 
+
+It is also possible [to download the jar
+file](http://github.com/jonase/cljcsv/downloads) and add it to your
+classpath manually.
 
 ## Usage
 
