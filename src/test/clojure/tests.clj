@@ -26,3 +26,4 @@
 (deftest throw-if-quoted-on-eof
   (let [reader (StringReader. "ab,\"de,gh\nij,kl,mn")]
     (is (thrown? RuntimeException (doall (csv/read reader))))))
+
