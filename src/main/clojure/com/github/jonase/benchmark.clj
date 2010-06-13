@@ -85,6 +85,7 @@
 	lc (io/file (str *resource-dir* "lc.csv"))]
     (when-not (and (.exists fm) (.exists mf) (.exists mm) (.exists lc))
       (println "Creating benchmark files...")
+      (.mkdirs (io/file *resource-dir*))
       (gencsv-files)
       (println "done."))
     (println "csvclj benchmark")
