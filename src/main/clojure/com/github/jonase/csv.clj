@@ -125,7 +125,7 @@
 
 (defn write
   "Writes the content of records (a sequence) to writer. Each
-  record (s sequence) is separated with newline (either :lf (default)
+  record (a sequence) is separated with newline (either :lf (default)
   or :cr+lf). Each cell (any object) is separated with
   separator (default \\,). Cells are quoted (default \\\") only when
   needed. The writer is not closed."
