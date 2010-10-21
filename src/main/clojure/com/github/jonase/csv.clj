@@ -15,14 +15,14 @@
 
 (set! *warn-on-reflection* true)
 
-(def ^{:private true}
+(def ^:private
      lf (int \newline))
-(def ^{:private true}
+(def ^:private
      cr (int \return))
-(def ^{:private true}
+(def ^:private
      eof -1)
 
-(defn- read-cell [^Reader reader sep quote]
+(defn ^:private read-cell [^Reader reader sep quote]
   (let [sb (StringBuilder.)]
     (loop [ch (.read reader) in-quotes? false]
       (condp == ch
@@ -67,7 +67,7 @@
 	(do (.append sb (char ch))
 	    (recur (.read reader) in-quotes?))))))
 
-(defn- read-record [reader sep quote]
+(defn ^:private read-record [reader sep quote]
   (loop [record (transient [])]
     (let [[cell sentinel] (read-cell reader sep quote)]
       (case sentinel
@@ -76,7 +76,7 @@
 	;; else
 	[(persistent! (conj! record cell)) sentinel]))))
 
-(defn- read* [reader sep quote]
+(defn ^:private read* [reader sep quote]
   (lazy-seq
    (let [[record sentinel] (read-record reader sep quote)]
      (case sentinel
@@ -98,7 +98,7 @@
 	  (char? quote)]}
   (read* reader (int separator) (int quote)))
 
-(defn- write-cell [^Writer writer obj sep quote]
+(defn ^:private write-cell [^Writer writer obj sep quote]
   (let [string (str obj)
 	must-quote (some #{sep quote \newline} string)]
     (when must-quote (.write writer (int quote)))
@@ -108,7 +108,7 @@
 		     string))
     (when must-quote (.write writer (int quote)))))
 
-(defn- write-record [^Writer writer record sep quote]
+(defn ^:private write-record [^Writer writer record sep quote]
   (loop [record record]
     (when-first [cell record]
       (write-cell writer cell sep quote)
@@ -116,7 +116,7 @@
 	(.write writer (int sep))
 	(recur more)))))
 
-(defn- write* [^Writer writer records sep quote ^String newline]
+(defn ^:private write* [^Writer writer records sep quote ^String newline]
   (loop [records records]
     (when-first [record records]
       (write-record writer record sep quote)
@@ -142,5 +142,3 @@
 	  separator
 	  quote
 	  ({:lf "\n" :cr+lf "\r\n"} newline)))
-
-

@@ -4,7 +4,7 @@
   (:require [com.github.jonase [csv :as csv]]
 	    [clojure.java [io :as io]]))
 
-(def *resource-dir* "resources/")
+(def ^:dynamic *resource-dir* "resources/")
 
 (defn- gencsv-seq [rows cols f]
   (->> (repeatedly f)
@@ -94,4 +94,5 @@
     (println (format "1.1. Many cells/record (%.1f MB): %.2fms" (filesize fm) (bench-reading fm)))
     (println (format "1.2. Many records (%.1f MB): %.2fms" (filesize mf) (bench-reading mf)))
     (println (format "1.3. Many records & cells (%.1f MB): %.2fms" (filesize mm) (bench-reading mm)))
-    (println (format "1.4. Long cells (%.1f MB): %.2fms" (filesize lc) (bench-reading lc)))))
+    (println (format "1.4. Long cells (%.1f MB): %.2fms" (filesize lc) (bench-reading lc)))
+    (flush)))
