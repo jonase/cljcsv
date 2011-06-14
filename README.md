@@ -12,23 +12,17 @@ license](http://www.opensource.org/licenses/eclipse-1.0.php). Clojure
 Add 
 
     <dependency>
-      <groupId>com.github.jonase.csv</groupId>
-      <artifactId>csvclj</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <groupId>cljcsv</groupId>
+      <artifactId>cljcsv</artifactId>
+      <version>1.2.1</version>
     </dependency>
 
 to your `pom.xml` file.
 
 ### Using leiningen
 
-Add `[com.github.jonase.csv/csvclj "1.0.0-SNAPSHOT"]` as an dependency
+Add `[cljcsv "1.2.1"]` as an dependency
 to your `project.clj`.
-
-### Download 
-
-It is also possible [to download the jar
-file](http://github.com/jonase/cljcsv/downloads) and add it to your
-classpath manually.
 
 ## Usage
 
@@ -48,10 +42,10 @@ classpath manually.
 
 ### Reading
 
-Cljcsv supports [RFC
+cljcsv supports [RFC
 4180](http://tools.ietf.org/html/rfc4180). Additionally, it is
-possible to choose separator and qoute characters. Reading is fast
-and lazy. See `(doc csv/read)` for available options.
+possible to choose separator and qoute characters. Reading is *fast*
+and *lazy*. See `(doc csv/read)` for available options.
 
 ### Writing
 
