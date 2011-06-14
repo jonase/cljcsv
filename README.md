@@ -1,9 +1,14 @@
 # cljcsv
 
 Cljcsv is a clojure library for reading and writing comma separated
-value files. It is licensed under the [Eclipse open source
-license](http://www.opensource.org/licenses/eclipse-1.0.php). Clojure
-1.2 is required.
+value (csv) files. It is licensed under the [Eclipse open source
+license](http://www.opensource.org/licenses/eclipse-1.0.php). 
+
+The library has been tested on Clojure version 1.2, 1.2.1 and
+1.3-alpha8.
+
+If you find bugs or has a feature request please open a ticket on the
+github issue tracker.
 
 ## Installation
 
@@ -21,8 +26,7 @@ to your `pom.xml` file.
 
 ### Using leiningen
 
-Add `[cljcsv "1.2.1"]` as an dependency
-to your `project.clj`.
+Add `[cljcsv "1.2.1"]` as a dependency to your `project.clj`.
 
 ## Usage
 
