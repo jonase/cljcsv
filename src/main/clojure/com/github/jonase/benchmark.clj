@@ -2,9 +2,10 @@
       :doc "Benchmarking cljcsv."}
   com.github.jonase.benchmark
   (:require [com.github.jonase [csv :as csv]]
-	    [clojure.java [io :as io]]))
+	    [clojure.java [io :as io]])
+  (:import [java.io File Reader]))
 
-(def ^:dynamic *resource-dir* "resources/")
+(def *resource-dir* "resources/")
 
 (defn- gencsv-seq [rows cols f]
   (->> (repeatedly f)
@@ -61,7 +62,7 @@
 	(reduce min nums))
      (- (count nums) 2)))
 
-(defn- filesize [file]
+(defn- filesize [^File file]
   "filesize, in MB"
   (double (/ (.length file)
 	     (* 1024 1024))))
@@ -72,7 +73,7 @@
   (let [rds (readers file)]
     (loop [times [] count 10]
       (if (pos? count)
-	(recur (conj times (with-open [reader (next-reader rds)]
+	(recur (conj times (with-open [^Reader reader (next-reader rds)]
 			     (time* (doall (csv/read reader)))))
 	       (dec count))
 	(avg times)))))
