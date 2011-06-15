@@ -42,6 +42,8 @@ Add `[cljcsv "1.2.1"]` as a dependency to your `project.clj`.
                  [["abc" "def"]
                   ["ghi" "jkl"]]))
 
+See also this [introduction](https://github.com/jonase/cljcsv/wiki/Intro)
+
 ## Features
 
 ### Reading
