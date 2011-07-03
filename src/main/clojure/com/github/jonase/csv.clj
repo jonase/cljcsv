@@ -11,9 +11,11 @@
   com.github.jonase.csv
   (:refer-clojure :exclude [read])
   (:require (clojure [string :as str]))
-  (:import (java.io Reader Writer EOFException)))
+  (:import (java.io Reader Writer StringReader EOFException)))
 
 (set! *warn-on-reflection* true)
+
+;; Reading
 
 (def ^{:private true} lf  (int \newline))
 (def ^{:private true} cr  (int \return))
@@ -73,27 +75,38 @@
 	;; else
 	[(persistent! (conj! record cell)) sentinel]))))
 
-(defn ^{:private true} read* [reader sep quote]
-  (lazy-seq
-   (let [[record sentinel] (read-record reader sep quote)]
-     (case sentinel
-       :eol
-       (cons record (read* reader sep quote))
-       :eof
-       (when-not (= record [""])
-	 (cons record nil))))))
+(defprotocol Read-CSV-From
+  (read-csv-from [input sep quote]))
 
-(defn read
-  "Reads cells from reader using the separator (default \\,) and
-  quote (default \\\") characters. Records are separated by either \\n
-  or \\r\\n. Returns a lazy sequence of records (vectors) containing
-  the cells (strings). The reader is not closed."
-  [reader & {:keys [separator quote]
-	     :or   {separator \,
-		    quote \"}}]
+(extend-protocol Read-CSV-From
+  String
+  (read-csv-from [s sep quote]
+    (read-csv-from (StringReader. s) sep quote))
+  
+  Reader
+  (read-csv-from [reader sep quote] 
+    (lazy-seq
+     (let [[record sentinel] (read-record reader sep quote)]
+       (case sentinel
+	 :eol (cons record (read-csv-from reader sep quote))
+	 :eof (when-not (= record [""])
+		(cons record nil)))))))
+
+(defn read-csv
+  "Reads cells from input (either a String or a java.io.Reader) using
+  the keyword arguments :separator (default \\,) and :quote (default
+  \\\"). Returns a lazy sequence of vectors containing the
+  strings. The reader is not closed."
+  [input & {:keys [separator quote]
+	    :or   {separator \,
+		   quote \"}}]
   {:pre  [(char? separator)
 	  (char? quote)]}
-  (read* reader (int separator) (int quote)))
+  (read-csv-from input (int separator) (int quote)))
+
+
+
+;; Writing
 
 (defn ^{:private true} write-cell [^Writer writer obj sep quote]
   (let [string (str obj)
@@ -113,19 +126,21 @@
 	(.write writer (int sep))
 	(recur more)))))
 
-(defn ^{:private true} write* [^Writer writer records sep quote ^String newline]
+(defn ^{:private true} write-csv*
+  [^Writer writer records sep quote ^String newline]
   (loop [records records]
     (when-first [record records]
       (write-record writer record sep quote)
       (.write writer newline)
       (recur (next records)))))
 
-(defn write
-  "Writes the content of records (a sequence) to writer. Each
-  record (a sequence) is separated with newline (either :lf (default)
-  or :cr+lf). Each cell (any object) is separated with
-  separator (default \\,). Cells are quoted (default \\\") only when
-  needed. The writer is not closed."
+(defn write-csv
+  "Writes the content of a sequence to writer. Each sequence is
+   separated with newline (either :lf (default) or :cr+lf). Each
+   cell (any object) is separated with separator (default \\,). Cells
+   are quoted (default \\\") only when needed. The writer is not
+   closed."
+  
   [writer records & {:keys [separator quote newline]
 		     :or   {separator \,
 			    quote \"
@@ -134,8 +149,8 @@
 	  (char? quote)
 	  (or (= newline :lf)
 	      (= newline :cr+lf))]}
-  (write* writer
-	  records
-	  separator
-	  quote
-	  ({:lf "\n" :cr+lf "\r\n"} newline)))
+  (write-csv* writer
+	      records
+	      separator
+	      quote
+	      ({:lf "\n" :cr+lf "\r\n"} newline)))
