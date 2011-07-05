@@ -93,16 +93,15 @@
 		(cons record nil)))))))
 
 (defn read-csv
-  "Reads cells from input (either a String or a java.io.Reader) using
-  the keyword arguments :separator (default \\,) and :quote (default
-  \\\"). Returns a lazy sequence of vectors containing the
-  strings. The reader is not closed."
-  [input & {:keys [separator quote]
-	    :or   {separator \,
-		   quote \"}}]
-  {:pre  [(char? separator)
-	  (char? quote)]}
-  (read-csv-from input (int separator) (int quote)))
+  "Reads CSV-data from input (String or java.io.Reader) into a lazy
+  sequence of vectors.
+
+   Valid options are
+     :separator (default \\,)
+     :quote (default \\\")"
+  [input & options]
+  (let [{:keys [separator quote] :or {separator \, quote \"}} options]
+    (read-csv-from input (int separator) (int quote))))
 
 
 
@@ -135,22 +134,16 @@
       (recur (next records)))))
 
 (defn write-csv
-  "Writes the content of a sequence to writer. Each sequence is
-   separated with newline (either :lf (default) or :cr+lf). Each
-   cell (any object) is separated with separator (default \\,). Cells
-   are quoted (default \\\") only when needed. The writer is not
-   closed."
-  
-  [writer records & {:keys [separator quote newline]
-		     :or   {separator \,
-			    quote \"
-			    newline :lf}}]
-  {:pre  [(char? separator)
-	  (char? quote)
-	  (or (= newline :lf)
-	      (= newline :cr+lf))]}
-  (write-csv* writer
-	      records
-	      separator
-	      quote
-	      ({:lf "\n" :cr+lf "\r\n"} newline)))
+  "Writes data to writer in CSV-format.
+
+   Valid options are
+     :separator (default \\,)
+     :quote (default \\\")
+     :newline (:lf (default) or :cr+lf)"
+  [writer data & options]
+  (let [{:keys [separator quote newline] :or {separator \, quote \" newline :lf}} options]
+    (write-csv* writer
+		data
+		separator
+		quote
+		({:lf "\n" :cr+lf "\r\n"} newline))))
