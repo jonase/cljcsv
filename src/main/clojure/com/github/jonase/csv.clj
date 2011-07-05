@@ -9,7 +9,6 @@
 (ns ^{:author "Jonas Enlund"
       :doc "Reading and writing comma separated values."}
   com.github.jonase.csv
-  (:refer-clojure :exclude [read])
   (:require (clojure [string :as str]))
   (:import (java.io Reader Writer StringReader EOFException)))
 
