@@ -20,58 +20,48 @@
 (def ^{:private true} cr  (int \return))
 (def ^{:private true} eof -1)
 
-(defn ^{:private true} read-cell [^Reader reader sep quote]
+(defn- read-quoted-cell [^Reader reader sep quote]
   (let [sb (StringBuilder.)]
-    (loop [ch (.read reader) in-quotes? false]
+    (loop [ch (.read reader)]
       (condp == ch
-	  
-	sep
-	(if in-quotes?
-	  (do (.append sb (char sep))
-	      (recur (.read reader) true))
-	  [(.toString sb) :sep])
-	
-	quote
-	(if in-quotes?
-	  (let [next-ch (.read reader)]
-	    (if (== quote next-ch)
-	      (do (.append sb (char quote))
-		  (recur (.read reader) true))
-	      (recur next-ch false)))
-	  (recur (.read reader) true))
-	
-	lf
-	(if in-quotes?
-	  (do (.append sb \newline)
-	      (recur (.read reader) true))
-	  [(.toString sb) :eol])
-	
-	cr
-	(if in-quotes?
-	  (do (.append sb \return)
-	      (recur (.read reader) true))
-	  (let [next-ch (.read reader)]
-	    (if (== next-ch lf)
-	      [(.toString sb) :eol]
-	      (do (.append sb \return)
-		  (recur next-ch false)))))
-	
-	eof
-	(if in-quotes?
-	  (throw (EOFException. "End of file reached while in a quoted state."))
-	  [(.toString sb) :eof])
-	
-	;; else
-	(do (.append sb (char ch))
-	    (recur (.read reader) in-quotes?))))))
+	  quote (let [next-ch (.read reader)]
+		  (condp == next-ch
+		      quote (do (.append sb (char quote))
+				(recur (.read reader)))
+		      sep [(str sb) :sep]
+		      lf  [(str sb) :eol]
+		      cr  (if (== (.read reader) lf)
+			    [(str sb) :eol]
+			    (throw (RuntimeException. (format "CSV error (unexpected character: %c)" next-ch))))
+		      eof [(str sb) :eof]
+		      (throw (RuntimeException. (format "CSV error (unexpected character: %c)" next-ch)))))
+	  eof (throw (EOFException. "CSV error (unexpected end of file)"))
+	  (do (.append sb (char ch))
+	      (recur (.read reader)))))))
+	   
+(defn- read-cell [^Reader reader sep quote]
+  (let [sb (StringBuilder.)]
+    (let [first-ch (.read reader)]
+      (if (== first-ch quote)
+	(read-quoted-cell reader sep quote)
+	(loop [ch first-ch]
+	  (condp == ch
+	      sep [(str sb) :sep]
+	      lf  [(str sb) :eol]
+	      cr (let [next-ch (.read reader)]
+		   (if (== next-ch lf)
+		     [(str sb) :eol]
+		     (do (.append sb \return)
+			 (recur next-ch))))
+	      eof [(str sb) :eof]
+	      (do (.append sb (char ch))
+		  (recur (.read reader)))))))))
 
-(defn ^{:private true} read-record [reader sep quote]
+(defn- read-record [reader sep quote]
   (loop [record (transient [])]
     (let [[cell sentinel] (read-cell reader sep quote)]
       (case sentinel
-	:sep
-	(recur (conj! record cell))
-	;; else
+	:sep (recur (conj! record cell))
 	[(persistent! (conj! record cell)) sentinel]))))
 
 (defprotocol Read-CSV-From
@@ -106,7 +96,7 @@
 
 ;; Writing
 
-(defn ^{:private true} write-cell [^Writer writer obj sep quote]
+(defn- write-cell [^Writer writer obj sep quote]
   (let [string (str obj)
 	must-quote (some #{sep quote \newline} string)]
     (when must-quote (.write writer (int quote)))
@@ -116,7 +106,7 @@
 		     string))
     (when must-quote (.write writer (int quote)))))
 
-(defn ^{:private true} write-record [^Writer writer record sep quote]
+(defn- write-record [^Writer writer record sep quote]
   (loop [record record]
     (when-first [cell record]
       (write-cell writer cell sep quote)
@@ -124,7 +114,7 @@
 	(.write writer (int sep))
 	(recur more)))))
 
-(defn ^{:private true} write-csv*
+(defn- write-csv*
   [^Writer writer records sep quote ^String newline]
   (loop [records records]
     (when-first [record records]
