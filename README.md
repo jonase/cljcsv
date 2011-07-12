@@ -5,7 +5,7 @@ value (csv) files. It is licensed under the [Eclipse open source
 license](http://www.opensource.org/licenses/eclipse-1.0.php). 
 
 The library has been tested on Clojure version 1.2, 1.2.1 and
-1.3-alpha8.
+1.3-beta1.
 
 If you find bugs or has a feature request please open a ticket on the
 github issue tracker.
@@ -19,26 +19,26 @@ Add
     <dependency>
       <groupId>cljcsv</groupId>
       <artifactId>cljcsv</artifactId>
-      <version>1.2.1</version>
+      <version>1.3</version>
     </dependency>
 
 to your `pom.xml` file.
 
 ### Using leiningen
 
-Add `[cljcsv "1.2.1"]` as a dependency to your `project.clj`.
+Add `[cljcsv "1.3"]` as a dependency to your `project.clj`.
 
 ## Usage
 
-    (require '(com.github.jonase [csv :as csv])
-             '(clojure.java [io :as io]))
+    (use '(com.github.jonase.csv)
+         '(clojure.java.io))
 
     (with-open [in-file (io/reader "in-file.csv")]
       (doall
-        (csv/read in-file)))
+        (read-csv in-file)))
 
     (with-open [out-file (io/writer "out-file.csv")]
-      (csv/write out-file
+      (write-csv out-file
                  [["abc" "def"]
                   ["ghi" "jkl"]]))
 
@@ -51,10 +51,10 @@ See also this [introduction](https://github.com/jonase/cljcsv/wiki/Intro)
 cljcsv supports [RFC
 4180](http://tools.ietf.org/html/rfc4180). Additionally, it is
 possible to choose separator and qoute characters. Reading is *fast*
-and *lazy*. See `(doc csv/read)` for available options.
+and *lazy*. See `(doc read-csv)` for available options.
 
 ### Writing
 
-See `(doc csv/write)` for available options.
+See `(doc write-csv)` for available options.
 
 
