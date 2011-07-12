@@ -1,4 +1,4 @@
-(defproject cljcsv "1.2.1"
+(defproject cljcsv "1.3"
   :description "Reading and writing comma separated values in Clojure."
   :url "http://github.com/jonase/cljcsv"
   :dependencies [[org.clojure/clojure "1.2.1"]]

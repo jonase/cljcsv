@@ -3,14 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>cljcsv</groupId>
   <artifactId>cljcsv</artifactId>
-  <version>1.2.1</version>
+  <version>1.3</version>
   <name>cljcsv</name>
   <description>Reading and writing comma separated values in Clojure.</description>
   <url>http://github.com/jonase/cljcsv</url>
   <scm>
     <connection>scm:git:git://github.com/jonase/cljcsv.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/jonase/cljcsv.git</developerConnection>
-    <tag>93ac31b802aadae31354442858faa44fa3c3d132</tag>
+    <tag>c84349974d2a92f7e471a8254c62d809eafee81d</tag>
     <url>https://github.com/jonase/cljcsv</url>
   </scm>
   <build>
