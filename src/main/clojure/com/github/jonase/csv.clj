@@ -32,9 +32,9 @@
 		      lf  [(str sb) :eol]
 		      cr  (if (== (.read reader) lf)
 			    [(str sb) :eol]
-			    (throw (RuntimeException. (format "CSV error (unexpected character: %c)" next-ch))))
+			    (throw (RuntimeException. ^String (format "CSV error (unexpected character: %c)" next-ch))))
 		      eof [(str sb) :eof]
-		      (throw (RuntimeException. (format "CSV error (unexpected character: %c)" next-ch)))))
+		      (throw (RuntimeException. ^String (format "CSV error (unexpected character: %c)" next-ch)))))
 	  eof (throw (EOFException. "CSV error (unexpected end of file)"))
 	  (do (.append sb (char ch))
 	      (recur (.read reader)))))))

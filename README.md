@@ -19,14 +19,14 @@ Add
     <dependency>
       <groupId>cljcsv</groupId>
       <artifactId>cljcsv</artifactId>
-      <version>1.3</version>
+      <version>1.3.1</version>
     </dependency>
 
 to your `pom.xml` file.
 
 ### Using leiningen
 
-Add `[cljcsv "1.3"]` as a dependency to your `project.clj`.
+Add `[cljcsv "1.3.1"]` as a dependency to your `project.clj`.
 
 ## Usage
 
@@ -56,5 +56,3 @@ and *lazy*. See `(doc read-csv)` for available options.
 ### Writing
 
 See `(doc write-csv)` for available options.
-
-
