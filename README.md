@@ -1,5 +1,7 @@
 # cljcsv
 
+*Note: cljcsv is no longer maintained as it has moved to [Clojure Contrib as data.csv](https://github.com/clojure/data.csv).*
+
 Cljcsv is a clojure library for reading and writing comma separated
 value (csv) files. It is licensed under the [Eclipse open source
 license](http://www.opensource.org/licenses/eclipse-1.0.php). 
